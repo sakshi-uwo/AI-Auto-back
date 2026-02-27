@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --exec \"node server.js\"",
+    "kill-port": "powershell -Command \"$p=(netstat -ano | findstr :5000 | ForEach-Object {($_ -split '\\\\s+')[-1]} | Select-Object -Unique); if($p){foreach($pid in $p){taskkill /F /PID $pid /T 2>$null}};Write-Host 'Port 5000 cleared'\"",
+    "start": "node server.js",
+    "seed:leads": "node scripts/seedLeads.js"
+  },
+  "dependencies": {
+    "@google-cloud/vertexai": "^1.10.0",
+    "@google/generative-ai": "^0.24.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.1.0",
+    "multer": "^2.0.2",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^8.0.1",
+    "resend": "^6.9.2",
+    "socket.io": "^4.7.5",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
