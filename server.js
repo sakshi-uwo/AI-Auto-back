@@ -49,7 +49,6 @@ import documentRoutes from './routes/documentRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
 import maintenanceMiddleware from './middleware/maintenanceMiddleware.js';
 import SystemSettings from './models/SystemSettings.js';
-import notificationService from './services/NotificationService.js';
 import aiRoutes from './routes/aiRoutes.js';
 
 const app = express();
@@ -60,9 +59,23 @@ app.use(helmet()); // Security headers
 app.use(cookieParser()); // Parse cookies
 app.use(express.json());
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://ai-auto-front.onrender.com",
+    process.env.FRONTEND_URL
+].filter(Boolean); // removes undefined if FRONTEND_URL is not set
+
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || "http://localhost:5173",
+        origin: function (origin, callback) {
+            // allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.indexOf(origin) === -1) {
+                const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+                return callback(new Error(msg), false);
+            }
+            return callback(null, true);
+        },
         credentials: true,
     })
 );
@@ -87,7 +100,7 @@ mongoose
 /* -------------------- SOCKET.IO -------------------- */
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL || "http://localhost:5173",
+        origin: ["http://localhost:5173", "https://ai-auto-front.onrender.com"],
         methods: ["GET", "POST", "PATCH"],
     },
 });
