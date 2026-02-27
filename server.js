@@ -139,6 +139,7 @@ app.use("/api/settings", settingsRoutes); // Allow settings regardless (Admins o
 
 // Protect all other API routes during maintenance
 app.use("/api", maintenanceMiddleware);
+app.use("/api/ai", aiRoutes);
 
 app.use("/api/lead", leadRoutes);
 app.use("/api/users", userRoutes);
